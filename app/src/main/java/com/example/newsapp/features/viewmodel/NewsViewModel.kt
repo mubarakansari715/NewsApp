@@ -1,9 +1,9 @@
-package com.example.newsapp.viewmodel
+package com.example.newsapp.features.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newsapp.repository.NewsRepository
+import com.example.newsapp.features.repository.NewsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

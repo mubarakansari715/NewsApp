@@ -1,5 +1,6 @@
 package com.example.newsapp.di
 
+import com.example.newsapp.network.NewsApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
