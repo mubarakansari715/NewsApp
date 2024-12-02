@@ -1,8 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    //added
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
 }
 
@@ -61,7 +62,7 @@ dependencies {
 
     //Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     //Retrofit
     implementation(libs.retrofit)
@@ -81,8 +82,8 @@ dependencies {
 
     //Room
     implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
-    implementation ("androidx.room:room-ktx:2.6.1")
+    ksp(libs.androidx.room.compiler)
+    implementation (libs.androidx.room.ktx)
 
     //Glide
     implementation(libs.glide)
@@ -91,8 +92,8 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
 
     // OkHttp
-    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation (libs.okhttp)
 
     // HttpLoggingInterceptor for logging network requests
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation (libs.logging.interceptor)
 }
