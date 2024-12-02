@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.parcelize)
+    id("kotlin-kapt")
+
 }
 
 android {
@@ -62,7 +64,7 @@ dependencies {
 
     //Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+    kapt(libs.hilt.android.compiler)
 
     //Retrofit
     implementation(libs.retrofit)
@@ -82,7 +84,7 @@ dependencies {
 
     //Room
     implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
     implementation (libs.androidx.room.ktx)
 
     //Glide
