@@ -39,6 +39,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -85,7 +89,7 @@ dependencies {
     //Room
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
-    implementation (libs.androidx.room.ktx)
+    implementation(libs.androidx.room.ktx)
 
     //Glide
     implementation(libs.glide)
@@ -94,8 +98,8 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
 
     // OkHttp
-    implementation (libs.okhttp)
+    implementation(libs.okhttp)
 
     // HttpLoggingInterceptor for logging network requests
-    implementation (libs.logging.interceptor)
+    implementation(libs.logging.interceptor)
 }
