@@ -9,10 +9,10 @@ import javax.inject.Inject
 
 class NewsRepository @Inject constructor(private val apiService: NewsApiService) {
 
-    fun getAllNews(): Flow<NetworkResponse<List<Article>>> = flow {
+    fun getAllNews(page: Int): Flow<NetworkResponse<List<Article>>> = flow {
         try {
             emit(NetworkResponse.Loading)
-            val response = apiService.getAllNews()
+            val response = apiService.getAllNews(page = page)
             emit(NetworkResponse.Success(response.articles))
         } catch (e: Exception) {
             emit(NetworkResponse.Error(e.toString()))

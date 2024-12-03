@@ -19,8 +19,19 @@ class NewsViewModel @Inject constructor(private val repository: NewsRepository) 
     private val _newsHeadlineState = MutableStateFlow<NewsHeadlineState>(NewsHeadlineState.Loading)
     val newsHeadlineState: StateFlow<NewsHeadlineState> = _newsHeadlineState
 
+    val pagination = PaginationState()
+    fun updatePage() = pagination.pageNumber++
+    fun resetPagination() {
+        pagination.dataList.clear()
+        pagination.pageNumber = 1
+    }
+
+    fun setLoading(value: Boolean) {
+        pagination.loading = value
+    }
+
     fun getAllNews() {
-        repository.getAllNews().onEach { result ->
+        repository.getAllNews(pagination.pageNumber).onEach { result ->
             when (result) {
                 is NetworkResponse.Loading -> {
                     _newsHeadlineState.value = NewsHeadlineState.Loading
@@ -32,7 +43,9 @@ class NewsViewModel @Inject constructor(private val repository: NewsRepository) 
 
                 is NetworkResponse.Success -> {
                     result.result?.let {
-                        _newsHeadlineState.value = NewsHeadlineState.Success(it)
+                        updatePage()
+                        pagination.dataList.addAll(it)
+                        _newsHeadlineState.value = NewsHeadlineState.Success(pagination.dataList)
                     }
                 }
             }
@@ -45,3 +58,9 @@ sealed class NewsHeadlineState() {
     data class Error(val message: String) : NewsHeadlineState()
     data class Success(val data: List<Article>) : NewsHeadlineState()
 }
+
+data class PaginationState(
+    val dataList: MutableList<Article> = mutableListOf(),
+    var pageNumber: Int = 1,
+    var loading: Boolean = false,
+)
