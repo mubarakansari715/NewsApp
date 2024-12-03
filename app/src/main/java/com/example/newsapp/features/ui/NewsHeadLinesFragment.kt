@@ -60,6 +60,11 @@ class NewsHeadLinesFragment : Fragment() {
     private fun setupRecyclerview() {
         mAdapter = NewsHeadlineAdapter()
         binding.rvNewsHeadline.adapter = mAdapter
+        binding.lytParent.setOnRefreshListener {
+            viewModel.resetState()
+            fetchHeadline()
+            mAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun collectUiState() {
@@ -72,10 +77,12 @@ class NewsHeadLinesFragment : Fragment() {
 
                     is NewsHeadlineState.Error -> {
                         showPaginationLoader(false)
+                        binding.lytParent.isRefreshing = false
                     }
 
                     is NewsHeadlineState.Success -> {
                         val data = result.data
+                        binding.lytParent.isRefreshing = false
                         showPaginationLoader(false)
                         mAdapter.setData(data)
                     }

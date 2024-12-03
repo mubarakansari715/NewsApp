@@ -6,16 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".features.ui.NewsHeadLinesFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvNewsHeadline"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/lytParent"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/progress_circular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_headline" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvNewsHeadline"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_headline" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/progress_circular"

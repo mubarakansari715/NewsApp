@@ -51,6 +51,10 @@ class NewsViewModel @Inject constructor(private val repository: NewsRepository) 
             }
         }.launchIn(viewModelScope)
     }
+
+    fun resetState(){
+        _newsHeadlineState.value = NewsHeadlineState.Loading
+    }
 }
 
 sealed class NewsHeadlineState() {
