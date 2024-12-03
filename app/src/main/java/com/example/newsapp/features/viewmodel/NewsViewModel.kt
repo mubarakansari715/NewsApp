@@ -1,9 +1,10 @@
 package com.example.newsapp.features.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.features.model.Article
+import com.example.newsapp.features.model.toArticleLocalToArticle
+import com.example.newsapp.features.model.toArticleToArticleLocal
 import com.example.newsapp.features.repository.NewsRepository
 import com.example.newsapp.utils.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,8 +54,24 @@ class NewsViewModel @Inject constructor(private val repository: NewsRepository) 
         }.launchIn(viewModelScope)
     }
 
-    fun resetState(){
+    fun resetState() {
         _newsHeadlineState.value = NewsHeadlineState.Loading
+    }
+
+    fun insertData(article: Article) {
+        viewModelScope.launch {
+            repository.insertDbData(article.toArticleToArticleLocal())
+        }
+    }
+
+    fun getAllArticleDb() {
+        viewModelScope.launch {
+            val result = repository.getAllNewsDb()
+            val dataList: List<Article> = result.map { it.toArticleLocalToArticle() }
+            pagination.dataList = dataList.toMutableList()
+            resetState()
+            _newsHeadlineState.value = NewsHeadlineState.Success(pagination.dataList)
+        }
     }
 }
 
@@ -64,7 +82,7 @@ sealed class NewsHeadlineState() {
 }
 
 data class PaginationState(
-    val dataList: MutableList<Article> = mutableListOf(),
+    var dataList: MutableList<Article> = mutableListOf(),
     var pageNumber: Int = 1,
     var loading: Boolean = false,
 )

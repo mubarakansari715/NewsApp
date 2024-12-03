@@ -9,7 +9,7 @@ import com.example.newsapp.databinding.ItemHeadlineBinding
 import com.example.newsapp.features.model.Article
 
 class NewsHeadlineAdapter(
-
+    val clickedItems: ClickedItems
 ) : RecyclerView.Adapter<NewsHeadlineAdapter.NewsHeadlineViewHolder>() {
 
     private var list: List<Article> = listOf()
@@ -19,15 +19,14 @@ class NewsHeadlineAdapter(
         notifyDataSetChanged()
     }
 
-    class NewsHeadlineViewHolder(private val binding: ItemHeadlineBinding) :
+    class NewsHeadlineViewHolder(val binding: ItemHeadlineBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun setData(data: Article) {
             binding.apply {
                 tvTitle.text = data.title
-                Glide.with(binding.root.context)
-                    .load(data.urlToImage)
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .into(binding.shapeableImageView)
+                Glide.with(binding.root.context).load(data.urlToImage)
+                    .placeholder(R.drawable.ic_launcher_background).into(binding.shapeableImageView)
+
             }
         }
     }
@@ -45,5 +44,13 @@ class NewsHeadlineAdapter(
     override fun onBindViewHolder(holder: NewsHeadlineViewHolder, position: Int) {
         val data = list[position]
         holder.setData(data)
+
+        holder.binding.btnAddLocal.setOnClickListener {
+            clickedItems.addLocalDb(data)
+        }
     }
+}
+
+interface ClickedItems {
+    fun addLocalDb(article: Article)
 }

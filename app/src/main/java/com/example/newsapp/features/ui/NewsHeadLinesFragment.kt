@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentNewsHeadLinesBinding
+import com.example.newsapp.features.adapter.ClickedItems
 import com.example.newsapp.features.adapter.NewsHeadlineAdapter
+import com.example.newsapp.features.model.Article
 import com.example.newsapp.features.viewmodel.NewsHeadlineState
 import com.example.newsapp.features.viewmodel.NewsViewModel
 import com.example.newsapp.utils.Constants
@@ -22,7 +24,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class NewsHeadLinesFragment : Fragment() {
+class NewsHeadLinesFragment : Fragment(), ClickedItems {
 
     private lateinit var binding: FragmentNewsHeadLinesBinding
     private lateinit var mAdapter: NewsHeadlineAdapter
@@ -54,11 +56,12 @@ class NewsHeadLinesFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "Please the internet connection!", Toast.LENGTH_SHORT)
                 .show()
+            viewModel.getAllArticleDb()
         }
     }
 
     private fun setupRecyclerview() {
-        mAdapter = NewsHeadlineAdapter()
+        mAdapter = NewsHeadlineAdapter(this)
         binding.rvNewsHeadline.adapter = mAdapter
         binding.lytParent.setOnRefreshListener {
             viewModel.resetState()
@@ -121,6 +124,10 @@ class NewsHeadLinesFragment : Fragment() {
             viewModel.setLoading(false)
             binding.progressCircular.visibility = View.GONE
         }
+    }
+
+    override fun addLocalDb(article: Article) {
+        viewModel.insertData(article)
     }
 
 }
