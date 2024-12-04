@@ -1,5 +1,6 @@
 package com.example.newsapp.features.repository
 
+import android.util.Log
 import com.example.newsapp.features.model.Article
 import com.example.newsapp.features.model.ArticleDbModel
 import com.example.newsapp.network.NewsApiService
@@ -14,13 +15,20 @@ class NewsRepository @Inject constructor(
     private val articleDao: ArticleDao
 ) {
 
-    fun getAllNews(page: Int, category: String): Flow<NetworkResponse<List<Article>>> = flow {
+    fun getAllNews(
+        page: Int,
+        category: String,
+        searchText: String
+    ): Flow<NetworkResponse<List<Article>>> = flow {
         try {
             emit(NetworkResponse.Loading)
-            val response = apiService.getAllNews(page = page, category = category)
+            val response =
+                apiService.getAllNews(page = page, category = category, searchText = searchText)
+            Log.e("TAG", "==> Network response : $response", )
             emit(NetworkResponse.Success(response.articles))
         } catch (e: Exception) {
-            emit(NetworkResponse.Error(e.toString()))
+            Log.e("TAG", "==> Network response Failed : $e", )
+            emit(NetworkResponse.Error(e.message.toString()))
         }
     }
 

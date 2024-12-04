@@ -22,6 +22,7 @@ class NewsViewModel @Inject constructor(private val repository: NewsRepository) 
 
     // LiveData to store the last selected option
     val lastSelectedOption: MutableLiveData<String> = MutableLiveData("Technology")
+    val searchNews: MutableLiveData<String> = MutableLiveData("")
 
     private val _newsHeadlineState = MutableStateFlow<NewsHeadlineState>(NewsHeadlineState.Loading)
     val newsHeadlineState: StateFlow<NewsHeadlineState> = _newsHeadlineState
@@ -38,8 +39,11 @@ class NewsViewModel @Inject constructor(private val repository: NewsRepository) 
     }
 
     fun getAllNews() {
-        Log.e("TAG", "getAllNews: lastSelectedOption ${lastSelectedOption.value}", )
-        repository.getAllNews(pagination.pageNumber, lastSelectedOption.value.orEmpty()).onEach { result ->
+        repository.getAllNews(
+            page = pagination.pageNumber,
+            category = lastSelectedOption.value.orEmpty(),
+            searchText = searchNews.value.orEmpty()
+        ).onEach { result ->
             when (result) {
                 is NetworkResponse.Loading -> {
                     _newsHeadlineState.value = NewsHeadlineState.Loading

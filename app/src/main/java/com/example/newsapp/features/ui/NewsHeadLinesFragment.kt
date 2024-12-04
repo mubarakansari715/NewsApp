@@ -1,6 +1,8 @@
 package com.example.newsapp.features.ui
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -47,6 +49,7 @@ class NewsHeadLinesFragment : Fragment(), ClickedItems, BottomSheetClick {
         collectUiState()
         fetchHeadline()
         pagination()
+        searchNews()
 
         binding.btnCategory.setOnClickListener {
             // Show BottomSheet
@@ -57,6 +60,23 @@ class NewsHeadLinesFragment : Fragment(), ClickedItems, BottomSheetClick {
                 bottomSheetFragment.tag
             )
         }
+    }
+
+    private fun searchNews() {
+        binding.edtSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(chat: CharSequence?, start: Int, before: Int, count: Int) {
+                chat?.let {
+                    viewModel.searchNews.value = chat.toString()
+                    fetchHeadline()
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
     }
 
     private fun fetchHeadline() {
@@ -91,6 +111,7 @@ class NewsHeadLinesFragment : Fragment(), ClickedItems, BottomSheetClick {
                     is NewsHeadlineState.Error -> {
                         showPaginationLoader(false)
                         binding.lytParent.isRefreshing = false
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
 
                     is NewsHeadlineState.Success -> {
