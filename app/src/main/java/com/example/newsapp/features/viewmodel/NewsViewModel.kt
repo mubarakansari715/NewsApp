@@ -1,5 +1,7 @@
 package com.example.newsapp.features.viewmodel
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.features.model.Article
@@ -18,6 +20,9 @@ import javax.inject.Inject
 @HiltViewModel
 class NewsViewModel @Inject constructor(private val repository: NewsRepository) : ViewModel() {
 
+    // LiveData to store the last selected option
+    val lastSelectedOption: MutableLiveData<String> = MutableLiveData("Technology")
+
     private val _newsHeadlineState = MutableStateFlow<NewsHeadlineState>(NewsHeadlineState.Loading)
     val newsHeadlineState: StateFlow<NewsHeadlineState> = _newsHeadlineState
 
@@ -33,7 +38,8 @@ class NewsViewModel @Inject constructor(private val repository: NewsRepository) 
     }
 
     fun getAllNews() {
-        repository.getAllNews(pagination.pageNumber).onEach { result ->
+        Log.e("TAG", "getAllNews: lastSelectedOption ${lastSelectedOption.value}", )
+        repository.getAllNews(pagination.pageNumber, lastSelectedOption.value.orEmpty()).onEach { result ->
             when (result) {
                 is NetworkResponse.Loading -> {
                     _newsHeadlineState.value = NewsHeadlineState.Loading

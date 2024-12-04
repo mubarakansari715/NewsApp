@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class NewsHeadLinesFragment : Fragment(), ClickedItems {
+class NewsHeadLinesFragment : Fragment(), ClickedItems, BottomSheetClick {
 
     private lateinit var binding: FragmentNewsHeadLinesBinding
     private lateinit var mAdapter: NewsHeadlineAdapter
@@ -47,6 +47,16 @@ class NewsHeadLinesFragment : Fragment(), ClickedItems {
         collectUiState()
         fetchHeadline()
         pagination()
+
+        binding.btnCategory.setOnClickListener {
+            // Show BottomSheet
+            val bottomSheetFragment = BottomSheetFragment()
+            bottomSheetFragment.setUpClicked(this@NewsHeadLinesFragment)
+            bottomSheetFragment.show(
+                parentFragmentManager,
+                bottomSheetFragment.tag
+            )
+        }
     }
 
     private fun fetchHeadline() {
@@ -128,6 +138,10 @@ class NewsHeadLinesFragment : Fragment(), ClickedItems {
 
     override fun addLocalDb(article: Article) {
         viewModel.insertData(article)
+    }
+
+    override fun radioButtonClick(title: String) {
+        binding.btnCategory.text = "Category: $title"
     }
 
 }

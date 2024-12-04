@@ -14,10 +14,10 @@ class NewsRepository @Inject constructor(
     private val articleDao: ArticleDao
 ) {
 
-    fun getAllNews(page: Int): Flow<NetworkResponse<List<Article>>> = flow {
+    fun getAllNews(page: Int, category: String): Flow<NetworkResponse<List<Article>>> = flow {
         try {
             emit(NetworkResponse.Loading)
-            val response = apiService.getAllNews(page = page)
+            val response = apiService.getAllNews(page = page, category = category)
             emit(NetworkResponse.Success(response.articles))
         } catch (e: Exception) {
             emit(NetworkResponse.Error(e.toString()))
